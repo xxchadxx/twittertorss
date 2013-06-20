@@ -1,10 +1,14 @@
 """Settings for twittertorss app."""
 
 import os
+import local_settings
 
 LANGUAGE_CODE = 'en-us'
 
-SECRET_KEY = '1-b8om^fl2r6v^ot$e^=nn+!jplr^_tv_a)id6hjeg+n-namq('
+SECRET_KEY = local_settings.SECRET_KEY
+
+DEBUG = local_settings.DEBUG
+TEMPLATE_DEBUG = DEBUG
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -36,6 +40,3 @@ TEMPLATE_LOADERS = (
 LOGIN_REDIRECT_URL = '/'
 
 ROOT_URLCONF = 'urls'
-
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
