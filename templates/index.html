@@ -1,5 +1,8 @@
 <html><head></head>
 <body>
-Hello world!
+Users:<br/>
+{% for user in user_list %}
+  User: {{ user.username }}<br/>
+{% endfor %}
 </body>
 </html>
