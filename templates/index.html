@@ -1,8 +1,19 @@
-<html><head></head>
-<body>
-Users:<br/>
-{% for user in user_list %}
-  User: {{ user.username }}<br/>
-{% endfor %}
-</body>
-</html>
+{% extends 'main.html' %}
+
+{% block page_content %}
+  <p><form action='{% url add %}'>
+    <input type='submit' value='Add User'>
+  </form></p>
+
+  <p>Existing Users:</p>
+  <ul>
+    {% for user in user_list %}
+      <li>
+        <form method='post' action='{% url delete user.username %}'>
+          {% csrf_token %}
+          {{ user.username }} - <input type='submit' value='Delete'>
+        </form>
+      </li>
+    {% endfor %}
+  </ol>
+{% endblock %}
