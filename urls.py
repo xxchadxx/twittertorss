@@ -3,10 +3,12 @@
 from django.conf.urls import defaults
 from django.views.generic import list as generic_list
 from controllers import controllers
+from cron import cron
 from model import model
 
 # Generic url patterns
-urlpatterns = defaults.patterns('',
+urlpatterns = defaults.patterns(
+    '',
     defaults.url(
         r'^add/$', controllers.CreateView.as_view(
             template_name='add.html', form_class=model.UserForm,
@@ -21,4 +23,12 @@ urlpatterns = defaults.patterns('',
             template_name='index.html', context_object_name='user_list',
             queryset=model.User.query().order(model.User.username)),
         name='index'),
+)
+
+# Cron patterns.
+urlpatterns += defaults.patterns(
+    '',
+    defaults.url(
+        r'^tweets/$', cron.GetTweets.as_view(template_name='tweets.html'),
+        name='tweets'),
 )

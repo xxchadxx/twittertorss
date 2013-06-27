@@ -1,4 +1,4 @@
 cron:
-# - description: something something something
-#   url: /
-#   schedule: every 24 hours
+- description: Get latest tweets for everyone in the system.
+  url: /tweets
+  schedule: every 1 hours synchronized
