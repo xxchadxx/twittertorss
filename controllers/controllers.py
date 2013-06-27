@@ -3,7 +3,7 @@
 from django import shortcuts
 from django.views.generic import edit
 
-import logging
+
 class CreateView(edit.CreateView):
   """Basic controller for creating objects."""
 
