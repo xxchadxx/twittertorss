@@ -1,5 +1,6 @@
 """Crons for twittertorss app."""
 
+import logging
 import settings
 import tweepy
 from django.views import generic
@@ -44,4 +45,6 @@ class GetTweets(generic.TemplateView):
         user.last_tweet_id = statuses[0].id_str
         user.put()
 
+    logging.info('%s tweets from %s users saved to DB.', self.tweet_count,
+                 self.user_count)
     return super(GetTweets, self).get(*args, **kwargs)

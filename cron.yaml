@@ -1,4 +1,4 @@
 cron:
 - description: Get latest tweets for everyone in the system.
-  url: /tweets
+  url: /tweets/
   schedule: every 1 hours synchronized
