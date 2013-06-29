@@ -11,7 +11,9 @@
       <li>
         <form method='post' action='{% url delete user.username %}'>
           {% csrf_token %}
-          {{ user.username }} - <input type='submit' value='Delete'>
+          {{ user.name }}
+          - <a href='{% url rss user.username %}'>{{ user.username }}</a>
+          - <input type='submit' value='Delete'>
         </form>
       </li>
     {% endfor %}

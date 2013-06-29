@@ -16,6 +16,9 @@ handlers:
   static_files: favicon.ico
   upload: favicon\.ico
 
+- url: /rss/.*/
+  script: main.app
+
 - url: .*
   script: main.app
   login: admin

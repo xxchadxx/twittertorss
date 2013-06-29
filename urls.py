@@ -18,6 +18,8 @@ urlpatterns = defaults.patterns(
             model=model.User, success_url='/', slug_field='username'),
         name='delete'),
     defaults.url(
+        r'^rss/(?P<username>\w+)/$', model.TweetFeed(), name='rss'),
+    defaults.url(
         r'^tweets/$', controllers.GetTweets.as_view(
             template_name='tweets.html'),
         name='tweets'),
