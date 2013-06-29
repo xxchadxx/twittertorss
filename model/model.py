@@ -26,6 +26,22 @@ class User(ndb.Model):
   updated = ndb.DateTimeProperty(auto_now=True)
 
 
+class UserForm(forms.Form):
+  """Basic form for editing users."""
+  username = forms.CharField()
+
+  def clean(self):
+    """Cleans the data for the UserForm."""
+    cleaned_data = super(UserForm, self).clean()
+
+    # Get the user's twitter id and ensure the username is in the correct case.
+    api = OpenTwitterConnection()
+    user = api.get_user(screen_name=cleaned_data['username'])
+    cleaned_data['user_id'] = user.id_str
+    cleaned_data['username'] = user.screen_name
+    return cleaned_data
+
+
 class Tweet(ndb.Model):
   """Model representing a tweet."""
   tweet_id = ndb.StringProperty()
@@ -46,19 +62,3 @@ class Tweet(ndb.Model):
     return cls(
         tweet_id=status.id_str, text=status.text, tweet_time=status.created_at,
         username=status.user.screen_name)
-
-
-class UserForm(forms.Form):
-  """Basic form for editing users."""
-  username = forms.CharField()
-
-  def clean(self):
-    """Cleans the data for the UserForm."""
-    cleaned_data = super(UserForm, self).clean()
-
-    # Get the user's twitter id and ensure the username is in the correct case.
-    api = OpenTwitterConnection()
-    user = api.get_user(screen_name=cleaned_data['username'])
-    cleaned_data['user_id'] = user.id_str
-    cleaned_data['username'] = user.screen_name
-    return cleaned_data
