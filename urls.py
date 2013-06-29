@@ -1,12 +1,11 @@
 """Urls for twittertorss app."""
 
 from django.conf.urls import defaults
-from django.views.generic import list as generic_list
+from django.views import generic
 from controllers import controllers
-from cron import cron
 from model import model
 
-# Generic url patterns
+# Url patterns
 urlpatterns = defaults.patterns(
     '',
     defaults.url(
@@ -19,16 +18,12 @@ urlpatterns = defaults.patterns(
             model=model.User, success_url='/', slug_field='username'),
         name='delete'),
     defaults.url(
-        r'^$', generic_list.ListView.as_view(
+        r'^tweets/$', controllers.GetTweets.as_view(
+            template_name='tweets.html'),
+        name='tweets'),
+    defaults.url(
+        r'^$', generic.ListView.as_view(
             template_name='index.html', context_object_name='user_list',
             queryset=model.User.query().order(model.User.username)),
         name='index'),
-)
-
-# Cron patterns.
-urlpatterns += defaults.patterns(
-    '',
-    defaults.url(
-        r'^tweets/$', cron.GetTweets.as_view(template_name='tweets.html'),
-        name='tweets'),
 )
