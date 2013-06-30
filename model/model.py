@@ -62,7 +62,6 @@ class Tweet(ndb.Model):
   tweet_time = ndb.DateTimeProperty()
   user_id = ndb.StringProperty()
   username = ndb.StringProperty()
-  profile_pic = ndb.StringProperty()
   created = ndb.DateTimeProperty(auto_now_add=True)
   updated = ndb.DateTimeProperty(auto_now=True)
 
@@ -76,9 +75,7 @@ class Tweet(ndb.Model):
     """Create and return an object based on a status from the Twitter API."""
     return cls(
         tweet_id=status.id_str, text=status.text, tweet_time=status.created_at,
-        user_id=status.user.id_str, username=status.user.screen_name,
-        profile_pic=status.user.profile_image_url)
-
+        user_id=status.user.id_str, username=status.user.screen_name)
 
 class TweetFeed(views.Feed):
   """Class representing an RSS feed of a list of tweets."""
