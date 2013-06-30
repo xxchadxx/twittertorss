@@ -13,21 +13,29 @@ you.
 
 If you want to start up your own version to follow twitter users in your
 favorite feed reader, follow these instructions.
-1. Clone the code.
-2. Register an app engine app.
-3. Update app.yaml, changing the application name to your app engine app.
-4. Register as a Twitter developer and get your oauth credentials. There should
+
+1: Clone the code.
+
+2: Register an app engine app.
+
+3: Update app.yaml, changing the application name to your app engine app.
+
+4: Register as a Twitter developer and get your oauth credentials. There should
    be 4 (consumer key and secret, access token key and secret).
-5. Generate a Django secret key (just Google [Django secret key generator]).
-6. Create a file in the top level directory called local_settings.py.
-7. Add these 6 variables to local_settings.py:
+
+5: Generate a Django secret key (just Google [Django secret key generator]).
+
+6: Create a file in the top level directory called local_settings.py.
+
+7: Add these 6 variables to local_settings.py:
    - DEBUG (boolean True or False)
    - SECRET_KEY (the Django secrete key, as a string)
    - CONSUMER_KEY (Twitter consumer key, as a string)
    - CONSUMER_SECRET (Twitter consumer secret, as a string)
    - ACCESS_TOKEN_KEY (Twitter access token key, as a string)
    - ACCESS_TOKEN_SECRET (Twitter access token secret, as a string)
-8. Deploy to app engine, add a user, and click on the username once you've
+
+8: Deploy to app engine, add a user, and click on the username once you've
    added them to get the RSS feed link.
 
 As long as you don't follow dozens of people who tweet hundreds of times per
