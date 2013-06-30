@@ -4,6 +4,7 @@ import settings
 import tweepy
 from django import forms
 from django.contrib.syndication import views
+from django.utils import html
 from google.appengine.ext import ndb
 
 # URLs of direct links to a user and a tweet.
@@ -105,7 +106,7 @@ class TweetFeed(views.Feed):
 
   def item_description(self, tweet):
     """Returns the description of a tweet."""
-    return tweet.text
+    return html.urlize(tweet.text)
 
   def item_link(self, tweet):
     """Returns the link of a tweet."""
