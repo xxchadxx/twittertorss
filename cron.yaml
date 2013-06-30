@@ -5,4 +5,4 @@ cron:
 
 - description: Refresh user data for everyone in the system.
   url: /users/
-  schedule: every 1 week synchronized
+  schedule: every monday 09:00
