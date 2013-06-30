@@ -6,16 +6,27 @@
   </form></p>
 
   <p>Current Users:</p>
-  <ul>
+  <table>
     {% for user in user_list %}
-      <li>
-        <form method='post' action='{% url delete user.username %}'>
-          {% csrf_token %}
+      <tr>
+        <td>
+          <a href='{{ user.link }}'><img src='{{ user.profile_pic }}'></a>
+        </td>
+        <td>
           {{ user.name }}
-          - <a href='{% url rss user.username %}'>{{ user.username }}</a>
-          - <input type='submit' value='Delete'>
-        </form>
-      </li>
+        </td>
+        <td>
+          <a href='{% url rss user.username %}'>{{ user.username }}</a>
+        </td>
+        <td>
+          <form method='post' action='{% url delete user.username %}' style='margin: 0'>
+            {% csrf_token %}
+            <input type='submit' value='Delete'>
+          </form>
+        </td>
+      </tr>
     {% endfor %}
-  </ol>
+  </table>
+
+  <p><a href='{% url tweets %}'>Refresh Tweets</a></p>
 {% endblock %}
