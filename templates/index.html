@@ -28,5 +28,8 @@
     {% endfor %}
   </table>
 
-  <p><a href='{% url tweets %}'>Refresh Tweets</a></p>
+  <p>
+    <a href='{% url tweets %}'>Refresh Tweets</a> |
+    <a href='{% url users %}'>Refresh Users</a>
+  </p>
 {% endblock %}

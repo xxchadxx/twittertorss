@@ -24,6 +24,10 @@ urlpatterns = defaults.patterns(
             template_name='tweets.html'),
         name='tweets'),
     defaults.url(
+        r'^users/$', controllers.RefreshUsers.as_view(
+            template_name='users.html'),
+        name='users'),
+    defaults.url(
         r'^$', generic.ListView.as_view(
             template_name='index.html', context_object_name='user_list',
             queryset=model.User.query().order(model.User.username)),

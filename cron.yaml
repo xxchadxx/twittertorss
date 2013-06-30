@@ -2,3 +2,7 @@ cron:
 - description: Get latest tweets for everyone in the system.
   url: /tweets/
   schedule: every 1 hours synchronized
+
+- description: Refresh user data for everyone in the system.
+  url: /users/
+  schedule: every 1 week synchronized

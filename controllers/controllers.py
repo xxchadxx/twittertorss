@@ -75,3 +75,31 @@ class GetTweets(generic.TemplateView):
     logging.info('%s tweets from %s users saved to DB.', self.tweet_count,
                  self.user_count)
     return super(GetTweets, self).get(*args, **kwargs)
+
+
+class RefreshUsers(generic.TemplateView):
+  """Cron job handler to ensure user data (name / profile pic) is up to date."""
+  user_count = 0
+
+  def get_context_data(self, **kwargs):
+    """Gets additional context for the template."""
+    context = super(RefreshUsers, self).get_context_data(**kwargs)
+    context['user_count'] = self.user_count
+    return context
+
+  def get(self, *args, **kwargs):
+    """Function to update everyone's data."""
+    api = model.OpenTwitterConnection()
+
+    # Get the info for each user.
+    users = tuple(model.User.query())
+    self.user_count = len(users)
+    for user in users:
+      new_user = api.get_user(user_id=user.user_id)
+      user.username = new_user.screen_name
+      user.name = new_user.name
+      user.profile_pic = new_user.profile_image_url
+      user.put()
+
+    logging.info('Updated info for all %s users.', self.user_count)
+    return super(RefreshUsers, self).get(*args, **kwargs)
