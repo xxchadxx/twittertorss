@@ -31,7 +31,7 @@ class User(ndb.Model):
   @property
   def link(self):
     """Returns a direct link to this user."""
-    return USER_LINK.format(username=user.username)
+    return USER_LINK.format(username=self.username)
 
 
 class UserForm(forms.Form):
