@@ -6,7 +6,26 @@ from django.views import generic
 from model import model
 
 
-class CreateView(generic.CreateView):
+def GetTweetsForUser(user):
+  """Gets the most recent tweets for a user and saves them to the DB."""
+  api = model.OpenTwitterConnection()
+  statuses = api.user_timeline(
+      screen_name=user.username, since_id=user.last_tweet_id)
+
+  # Save the statuses to the DB.
+  for status in statuses:
+    tweet = model.Tweet.CreateFromStatus(status)
+    tweet.put()
+
+  if statuses:
+    # Update the last_tweet_id of this user.
+    user.last_tweet_id = statuses[0].id_str
+    user.put()
+
+  return len(statuses)
+
+
+class CreateUser(generic.CreateView):
   """Basic controller for creating user objects."""
 
   def get(self, request):
@@ -17,10 +36,12 @@ class CreateView(generic.CreateView):
   def post(self, request):
     """Process a post submission."""
     form = self.form_class(request.POST)
-    # If the form is valid, save the corresponding model and redirect.
+    # If the form is valid, save the corresponding user and redirect.
     if form.is_valid():
-      model = self.model(**form.cleaned_data)
-      model.put()
+      user = self.model(**form.cleaned_data)
+      user.put()
+      tweet_count = GetTweetsForUser(user)
+      logging.info('Added %s and got %s tweets.', user.username, tweet_count)
       return shortcuts.redirect(self.success_url)
 
     # Form isn't valid, so display the template with the form.
@@ -28,13 +49,20 @@ class CreateView(generic.CreateView):
       return shortcuts.render(request, self.template_name, {'form': form})
 
 
-class DeleteView(generic.DeleteView):
-  """Basic controller for deleting objects."""
+class DeleteUser(generic.DeleteView):
+  """Basic controller for deleting user objects."""
 
   def post(self, request, slug=None):
     """Process a post submission."""
-    model = self.model.query(getattr(self.model, self.slug_field) == slug).get()
-    model.key.delete()
+    user = self.model.query(getattr(self.model, self.slug_field) == slug).get()
+    user.key.delete()
+
+    # Delete tweets for the user.
+    tweets = tuple(model.Tweet.query(model.Tweet.username == user.username))
+    for tweet in tweets:
+      tweet.key.delete()
+
+    logging.info('Deleted %s and all associated tweets.', user.username)
     return shortcuts.redirect(self.success_url)
 
 
@@ -52,25 +80,10 @@ class GetTweets(generic.TemplateView):
 
   def get(self, *args, **kwargs):
     """Function to get the tweets and store them, then display the status."""
-    api = model.OpenTwitterConnection()
-
     # Get the statuses for each user.
     users = tuple(model.User.query())
     self.user_count = len(users)
-    for user in users:
-      statuses = api.user_timeline(
-          screen_name=user.username, since_id=user.last_tweet_id)
-      self.tweet_count += len(statuses)
-
-      # Save the statuses to the DB.
-      for status in statuses:
-        tweet = model.Tweet.CreateFromStatus(status)
-        tweet.put()
-
-      if statuses:
-        # Update the last_tweet_id of this user.
-        user.last_tweet_id = statuses[0].id_str
-        user.put()
+    self.tweet_count = sum(GetTweetsForUser(user) for user in users)
 
     logging.info('%s tweets from %s users saved to DB.', self.tweet_count,
                  self.user_count)
