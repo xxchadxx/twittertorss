@@ -14,7 +14,7 @@ from google.appengine.ext import ndb
 
 
 def log_exception(*args, **kwargs):
-    logging.exception('Exception in request:')
+  logging.exception('Exception in request:')
 
 signal = dispatch.Signal()
 
